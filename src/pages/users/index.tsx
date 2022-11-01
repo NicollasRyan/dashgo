@@ -22,14 +22,13 @@ import { Sidebar } from "../../components/sidebar";
 import { RiAddLine } from "react-icons/ri";
 import { Pagination } from "../../components/Pagination";
 import Link from "next/link";
-import { useEffect } from "react";
+import { api } from "../../servies/api";
 
 export default function UserList() {
   const { data, isLoading, isFetching, error } = useQuery(
     "users",
     async () => {
-      const response = await fetch("http://localhost:3000/api/users");
-      const data = await response.json();
+      const { data } = await api.get("http://localhost:3000/api/users");
       const users = data.users.map((user) => {
         return {
           id: user.id,
