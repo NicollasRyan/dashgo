@@ -23,13 +23,16 @@ import { Sidebar } from "../../components/sidebar";
 import { RiAddLine } from "react-icons/ri";
 import { Pagination } from "../../components/Pagination";
 import NextLink from "next/link";
-import { useUsers } from "../../servies/hooks/useusers";
+import { getUsers, useUsers } from "../../servies/hooks/useusers";
 import { queryClient } from "../../servies/queryclient";
 import { api } from "../../servies/api";
+import { GetServerSideProps } from "next";
 
-export default function UserList() {
+export default function UserList({ users }) {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isFetching, error } = useUsers(page);
+  const { data, isLoading, isFetching, error } = useUsers(page, {
+    initialData: users,
+  });
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -137,3 +140,13 @@ export default function UserList() {
     </Box>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { users, totalCount } = await getUsers(1);
+
+  return {
+    props: {
+      users,
+    },
+  };
+};
